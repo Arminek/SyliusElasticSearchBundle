@@ -34,7 +34,7 @@ final class CriteriaDataMapper implements DataMapperInterface
         $forms = iterator_to_array($forms);
         $filtering = [];
         foreach ($forms as $form) {
-            $filtering[$form->getConfig()->getOption('key')] = $form->getData();
+            $filtering[] = $form->getData();
         }
 
         $data = Criteria::fromQueryParameters($data->getResourceAlias(), $filtering);
