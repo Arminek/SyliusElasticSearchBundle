@@ -5,12 +5,12 @@ Feature: Filtering list of products by channels and price
     I want to be able to filter the products
 
     Background:
-        Given the store has a product "Banana T-Shirt" priced at "$100" in "tablets" channel
-        And the store also has a product "Star Wars T-Shirt" priced at "$150" in "mobile" channel
-        And the store also has a product "LOTR T-Shirt" priced at "$300" in "mobile" channel
-        And the store also has a product "Breaking Bad T-Shirt" priced at "$50" in "mobile" channel
-        And the store also has a product "Westworld T-Shirt" priced at "$1000" in "europe" channel
-        And the store also has a product "Orange T-Shirt" priced at "$1000" in "europe" channel
+        Given the store has a product "Banana T-Shirt" priced at "$100" in "Tablets" channel
+        And the store also has a product "Star Wars T-Shirt" priced at "$150" in "Mobile" channel
+        And the store also has a product "LOTR T-Shirt" priced at "$300" in "Mobile" channel
+        And the store also has a product "Breaking Bad T-Shirt" priced at "$50" in "Mobile" channel
+        And the store also has a product "Westworld T-Shirt" priced at "$1000" in "Europe" channel
+        And the store also has a product "Orange T-Shirt" priced at "$1000" in "Europe" channel
 
     @domain
     Scenario: Filtering products by mobile channel and price range

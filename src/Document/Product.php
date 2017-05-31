@@ -13,7 +13,7 @@ final class Product
     /**
      * @var string
      *
-     * @ElasticSearch\Id()
+     * @ElasticSearch\Property(type="keyword")
      */
     private $code;
 
@@ -33,6 +33,13 @@ final class Product
      * )
      */
     private $name;
+
+    /**
+     * @var string
+     *
+     * @ElasticSearch\Property(type="keyword")
+     */
+    private $slug;
 
     /**
      * @var string
@@ -63,18 +70,18 @@ final class Product
     private $price;
 
     /**
-     * @var TaxonCode
+     * @var Taxon
      *
-     * @ElasticSearch\Embedded(class="SyliusElasticSearchPlugin:TaxonCode")
+     * @ElasticSearch\Embedded(class="SyliusElasticSearchPlugin:Taxon")
      */
-    private $mainTaxonCode;
+    private $mainTaxon;
 
     /**
      * @var Collection
      *
-     * @ElasticSearch\Embedded(class="SyliusElasticSearchPlugin:TaxonCode", multiple=true)
+     * @ElasticSearch\Embedded(class="SyliusElasticSearchPlugin:Taxon", multiple=true)
      */
-    private $taxonCodes;
+    private $taxons;
 
     /**
      * @var Collection
@@ -82,6 +89,13 @@ final class Product
      * @ElasticSearch\Embedded(class="SyliusElasticSearchPlugin:AttributeValue", multiple=true)
      */
     private $attributeValues;
+
+    /**
+     * @var Collection
+     *
+     * @ElasticSearch\Embedded(class="SyliusElasticSearchPlugin:Image", multiple=true)
+     */
+    private $images;
 
     /**
      * @var \DateTime
@@ -93,7 +107,8 @@ final class Product
     public function __construct()
     {
         $this->attributeValues = new Collection();
-        $this->taxonCodes = new Collection();
+        $this->taxons = new Collection();
+        $this->images = new Collection();
     }
 
     /**
@@ -126,6 +141,22 @@ final class Product
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param string $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
     }
 
     /**
@@ -193,35 +224,35 @@ final class Product
     }
 
     /**
-     * @return TaxonCode
+     * @return Taxon
      */
-    public function getMainTaxonCode()
+    public function getMainTaxon()
     {
-        return $this->mainTaxonCode;
+        return $this->mainTaxon;
     }
 
     /**
-     * @param TaxonCode $mainTaxonCode
+     * @param Taxon $mainTaxon
      */
-    public function setMainTaxonCode(TaxonCode $mainTaxonCode)
+    public function setMainTaxon(Taxon $mainTaxon)
     {
-        $this->mainTaxonCode = $mainTaxonCode;
+        $this->mainTaxon = $mainTaxon;
     }
 
     /**
      * @return Collection
      */
-    public function getTaxonCodes()
+    public function getTaxons()
     {
-        return $this->taxonCodes;
+        return $this->taxons;
     }
 
     /**
-     * @param Collection $taxonCodes
+     * @param Collection $taxons
      */
-    public function setTaxonCodes(Collection $taxonCodes)
+    public function setTaxons(Collection $taxons)
     {
-        $this->taxonCodes = $taxonCodes;
+        $this->taxons = $taxons;
     }
 
     /**
@@ -238,6 +269,22 @@ final class Product
     public function setAttributeValues(Collection $attributeValues)
     {
         $this->attributeValues = $attributeValues;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getImages()
+    {
+        return $this->images;
+    }
+
+    /**
+     * @param Collection $images
+     */
+    public function setImages(Collection $images)
+    {
+        $this->images = $images;
     }
 
     /**

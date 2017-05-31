@@ -9,7 +9,7 @@ use Sylius\Component\Core\Model\ChannelPricing;
 use Sylius\Component\Core\Model\Product as SyliusProduct;
 use Sylius\Component\Core\Model\ProductTaxon;
 use Sylius\Component\Core\Model\ProductVariant;
-use Sylius\Component\Core\Model\Taxon;
+use Sylius\Component\Core\Model\Taxon as SyliusTaxon;
 use Sylius\Component\Currency\Model\Currency;
 use Sylius\Component\Locale\Model\Locale;
 use Sylius\Component\Product\Model\ProductAttribute;
@@ -17,7 +17,8 @@ use Sylius\Component\Product\Model\ProductAttributeValue;
 use Sylius\ElasticSearchPlugin\Document\Attribute;
 use Sylius\ElasticSearchPlugin\Document\AttributeValue;
 use Sylius\ElasticSearchPlugin\Document\Product;
-use Sylius\ElasticSearchPlugin\Document\TaxonCode;
+use Sylius\ElasticSearchPlugin\Document\Taxon;
+use Sylius\ElasticSearchPlugin\Exception\UnsupportedFactoryMethodException;
 use Sylius\ElasticSearchPlugin\Factory\ProductFactory;
 
 final class ProductFactoryTest extends \PHPUnit_Framework_TestCase
@@ -39,7 +40,7 @@ final class ProductFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(null, $product->getChannelCode());
         $this->assertEquals(null, $product->getCreatedAt());
         $this->assertEquals(null, $product->getDescription());
-        $this->assertEquals(new Collection, $product->getTaxonCodes());
+        $this->assertEquals(new Collection, $product->getTaxons());
     }
 
     /**
@@ -59,8 +60,10 @@ final class ProductFactoryTest extends \PHPUnit_Framework_TestCase
         $syliusProductAttributeValue->setAttribute($syliusProductAttribute);
         $syliusProductAttributeValue->setValue('red');
 
-        $syliusTaxon = new Taxon();
+        $syliusTaxon = new SyliusTaxon();
+        $syliusTaxon->setCurrentLocale('en_US');
         $syliusTaxon->setCode('tree');
+        $syliusTaxon->setSlug('/tree');
         $syliusProductTaxon = new ProductTaxon();
 
         $syliusLocale = new Locale();
@@ -104,11 +107,15 @@ final class ProductFactoryTest extends \PHPUnit_Framework_TestCase
             $syliusChannel
         );
 
-        $taxonCode = new TaxonCode();
-        $taxonCode->setValue('tree');
+        $taxon = new Taxon();
+        $taxon->setCode('tree');
+        $taxon->setPosition(0);
+        $taxon->setSlug('/tree');
 
-        $productTaxonCode = new TaxonCode();
-        $productTaxonCode->setValue('tree');
+        $productTaxon = new Taxon();
+        $productTaxon->setCode('tree');
+        $productTaxon->setSlug('/tree');
+        $productTaxon->setPosition(0);
 
         $productAttribute = new Attribute();
         $productAttribute->setCode('red');
@@ -134,17 +141,16 @@ final class ProductFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('mobile', $product->getChannelCode());
         $this->assertEquals($createdAt, $product->getCreatedAt());
         $this->assertEquals('Lorem ipsum', $product->getDescription());
-        $this->assertEquals($taxonCode, $product->getMainTaxonCode());
-        $this->assertEquals(new Collection([$productTaxonCode]), $product->getTaxonCodes());
+        $this->assertEquals($taxon, $product->getMainTaxon());
+        $this->assertEquals(new Collection([$productTaxon]), $product->getTaxons());
     }
 
     /**
      * @test
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function it_cannot_create_product_document_from_configurable_product()
     {
+        $this->expectException(UnsupportedFactoryMethodException::class);
         $factory = new ProductFactory();
 
         $syliusProduct = new SyliusProduct();

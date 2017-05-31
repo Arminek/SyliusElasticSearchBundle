@@ -15,7 +15,7 @@
         <service id="sylius_elastic_search.form_registry.filters" class="Sylius\Bundle\ResourceBundle\Form\Registry\FormTypeRegistry" />
         <service id="sylius_elastic_search.event_listener" class="Sylius\ElasticSearchPlugin\EventListener\ProductPublisher">
             <argument type="service" id="event_bus" />
-            <tag name="doctrine.event_listener" event="postPersist" />
+            <tag name="doctrine.event_listener" event="onFlush"/>
         </service>
 
         <service id="sylius_elastic_search.factory.product" class="Sylius\ElasticSearchPlugin\Factory\ProductFactory" />
@@ -24,5 +24,7 @@
             <argument type="service" id="sylius_elastic_search.factory.product" />
             <tag name="event_subscriber" subscribes_to="Sylius\ElasticSearchPlugin\Event\ProductCreated" method="handleProductCreated" />
         </service>
+
+        <service id="sylius_elastic_search.factory.product_list_view" class="Sylius\ElasticSearchPlugin\Factory\ProductListViewFactory" />
     </services>
 </container>

@@ -14,6 +14,7 @@ namespace Sylius\ElasticSearchPlugin\Controller;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sylius\ElasticSearchPlugin\Document\Product;
+use Sylius\ElasticSearchPlugin\Factory\ProductListViewFactoryInterface;
 use Sylius\ElasticSearchPlugin\Search\Criteria\Criteria;
 use Sylius\ElasticSearchPlugin\Search\SearchEngineInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,13 +36,20 @@ final class SearchController
     private $searchEngine;
 
     /**
+     * @var ProductListViewFactoryInterface
+     */
+    private $productListViewFactory;
+
+    /**
      * @param ViewHandlerInterface $restViewHandler
      * @param SearchEngineInterface $searchEngine
+     * @param ProductListViewFactoryInterface $productListViewFactory
      */
-    public function __construct(ViewHandlerInterface $restViewHandler, SearchEngineInterface $searchEngine)
+    public function __construct(ViewHandlerInterface $restViewHandler, SearchEngineInterface $searchEngine, ProductListViewFactoryInterface $productListViewFactory)
     {
         $this->restViewHandler = $restViewHandler;
         $this->searchEngine = $searchEngine;
+        $this->productListViewFactory = $productListViewFactory;
     }
 
     /**
@@ -60,8 +68,12 @@ final class SearchController
         $criteria = Criteria::fromQueryParameters(Product::class, $content);
 
         $result = $this->searchEngine->match($criteria);
-        $page = $result->take($criteria->paginating()->offset(), $criteria->paginating()->itemsPerPage());
 
-        return $this->restViewHandler->handle(View::create($page, Response::HTTP_OK));
+        return $this->restViewHandler->handle(
+            View::create(
+                $this->productListViewFactory->createFromSearchResultAndPaginating($result, $criteria->paginating()),
+                Response::HTTP_OK
+            )
+        );
     }
 }

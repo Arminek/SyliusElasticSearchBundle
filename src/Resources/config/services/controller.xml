@@ -8,6 +8,7 @@
         <service id="sylius_elastic_search.controller.search" class="Sylius\ElasticSearchPlugin\Controller\SearchController">
             <argument type="service" id="fos_rest.view_handler" />
             <argument type="service" id="sylius_elastic_search.search.elastic_engine" />
+            <argument type="service" id="sylius_elastic_search.factory.product_list_view" />
         </service>
     </services>
 </container>

@@ -16,7 +16,7 @@ use Doctrine\ORM\Id\UuidGenerator;
 use ONGR\ElasticsearchBundle\Service\Manager;
 use Sylius\ElasticSearchPlugin\Document\Price;
 use Sylius\ElasticSearchPlugin\Document\Product;
-use Sylius\ElasticSearchPlugin\Document\TaxonCode;
+use Sylius\ElasticSearchPlugin\Document\Taxon;
 
 final class ProductContext implements Context
 {
@@ -38,18 +38,18 @@ final class ProductContext implements Context
      */
     public function theStoreHasAboutMugsAndStickers($mugsNumber, $stickersNumber, $booksNumber)
     {
-        $mugsTaxonCode = new TaxonCode();
-        $mugsTaxonCode->setValue('mugs');
+        $mugsTaxon = new Taxon();
+        $mugsTaxon->setCode('mugs');
 
-        $stickersTaxonCode = new TaxonCode();
-        $stickersTaxonCode->setValue('stickers');
+        $stickersTaxon = new Taxon();
+        $stickersTaxon->setCode('stickers');
 
-        $booksTaxonCode = new TaxonCode();
-        $booksTaxonCode->setValue('books');
+        $booksTaxon = new Taxon();
+        $booksTaxon->setCode('books');
 
-        $this->generateProductsInTaxon($mugsNumber, $mugsTaxonCode);
-        $this->generateProductsInTaxon($stickersNumber, $stickersTaxonCode);
-        $this->generateProductsInTaxon($booksNumber, $booksTaxonCode);
+        $this->generateProductsInTaxon($mugsNumber, $mugsTaxon);
+        $this->generateProductsInTaxon($stickersNumber, $stickersTaxon);
+        $this->generateProductsInTaxon($booksNumber, $booksTaxon);
     }
 
     /**
@@ -67,13 +67,13 @@ final class ProductContext implements Context
 
     /**
      * @param int $howMany
-     * @param TaxonCode $taxonCode
+     * @param Taxon $taxonCode
      */
-    private function generateProductsInTaxon($howMany, TaxonCode $taxonCode)
+    private function generateProductsInTaxon($howMany, Taxon $taxonCode)
     {
         for ($i = 0; $i < $howMany; $i++) {
             $product = new Product();
-            $product->setMainTaxonCode($taxonCode);
+            $product->setMainTaxon($taxonCode);
             $product->setCode(uniqid());
             $this->manager->persist($product);
         }

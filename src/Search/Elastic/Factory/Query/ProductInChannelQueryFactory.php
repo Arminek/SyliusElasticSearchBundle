@@ -20,6 +20,6 @@ final class ProductInChannelQueryFactory implements QueryFactoryInterface
             throw new MissingQueryParameterException('channel_code', get_class($this));
         }
 
-        return new TermQuery('channel_code', strtolower($parameters['channel_code']));
+        return new TermQuery('channel_code', $parameters['channel_code']);
     }
 }

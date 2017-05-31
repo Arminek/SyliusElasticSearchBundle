@@ -25,7 +25,7 @@ final class ProductInMainTaxonQueryFactorySpec extends ObjectBehavior
 
     function it_creates_query()
     {
-        $this->create(['taxon_code' => 'mugs'])->shouldBeLike(new TermQuery('main_taxon_code.value', 'mugs'));
+        $this->create(['taxon_code' => 'mugs'])->shouldBeLike(new TermQuery('main_taxon.code', 'mugs'));
     }
 
     function it_cannot_create_query_if_there_is_no_required_parameters()

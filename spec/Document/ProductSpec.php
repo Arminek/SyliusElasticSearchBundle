@@ -6,7 +6,7 @@ use ONGR\ElasticsearchBundle\Collection\Collection;
 use Sylius\ElasticSearchPlugin\Document\Price;
 use Sylius\ElasticSearchPlugin\Document\Product;
 use PhpSpec\ObjectBehavior;
-use Sylius\ElasticSearchPlugin\Document\TaxonCode;
+use Sylius\ElasticSearchPlugin\Document\Taxon;
 
 final class ProductSpec extends ObjectBehavior
 {
@@ -60,18 +60,18 @@ final class ProductSpec extends ObjectBehavior
 
     function it_has_main_taxon_code()
     {
-        $taxonCode = new TaxonCode();
-        $this->setMainTaxonCode($taxonCode);
+        $taxonCode = new Taxon();
+        $this->setMainTaxon($taxonCode);
 
-        $this->getMainTaxonCode()->shouldReturn($taxonCode);
+        $this->getMainTaxon()->shouldReturn($taxonCode);
     }
 
     function it_has_taxon_codes()
     {
         $taxonCodes = new Collection();
-        $this->setTaxonCodes($taxonCodes);
+        $this->setTaxons($taxonCodes);
 
-        $this->getTaxonCodes()->shouldReturn($taxonCodes);
+        $this->getTaxons()->shouldReturn($taxonCodes);
     }
 
     function it_has_attributes()
@@ -81,4 +81,12 @@ final class ProductSpec extends ObjectBehavior
 
         $this->getAttributeValues()->shouldReturn($attributeValues);
     }
+
+    function it_has_slug()
+    {
+        $this->setSlug('/mug');
+
+        $this->getSlug()->shouldReturn('/mug');
+    }
+
 }

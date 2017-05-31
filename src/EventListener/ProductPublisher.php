@@ -2,7 +2,8 @@
 
 namespace Sylius\ElasticSearchPlugin\EventListener;
 
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\OnFlushEventArgs;
+use Doctrine\ORM\Event\PostFlushEventArgs;
 use SimpleBus\Message\Bus\MessageBus;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\ElasticSearchPlugin\Event\ProductCreated;
@@ -23,14 +24,15 @@ final class ProductPublisher
     }
 
     /**
-     * @param LifecycleEventArgs $event
+     * @param OnFlushEventArgs $event
      */
-    public function postPersist(LifecycleEventArgs $event)
+    public function onFlush(OnFlushEventArgs $event)
     {
-        $product = $event->getEntity();
-        if ($product instanceof ProductInterface) {
-            if ($product->isSimple()) {
-                $this->eventBus->handle(ProductCreated::occur($product));
+        $scheduledInsertions = $event->getEntityManager()->getUnitOfWork()->getScheduledEntityInsertions();
+
+        foreach ($scheduledInsertions as $entity) {
+            if ($entity instanceof ProductInterface && $entity->isSimple()) {
+                $this->eventBus->handle(ProductCreated::occur($entity));
             }
         }
     }
